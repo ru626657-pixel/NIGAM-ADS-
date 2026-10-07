@@ -56,15 +56,36 @@ body{display:flex;justify-content:center;min-height:100vh}
     <li>Har din ki market updates seedha Telegram par</li>
   </ul>
 
-  <a class="btn" id="joinBtn" href="http://t.me/Trty_115bot">Telegram Channel Join Karein</a>
+<a class="btn" id="joinBtn" href="https://t.me/Trty_115bot">Telegram Channel Join Karein</a>
   <p class="note">Limited seats – abhi button dabayein</p>
 
   <p class="disc">Disclaimer: Stock market mein investment/trading market risks ke adheen hai. Yahan di gayi jaankari sirf educational purpose ke liye hai, ise investment advice na samjhein. Profit ki koi guarantee nahi hai.</p>
 </main>
 
 <script>
-document.getElementById('joinBtn').addEventListener('click', function(){
-  try { fbq('track', 'Lead'); } catch(e) {}
+var API = 'https://telegram-market-bot-production.up.railway.app';
+var BOT = 'Trty_115bot';
+function getCookie(n){var m=document.cookie.match('(^|;)\\s*'+n+'=([^;]+)');return m?m[2]:null}
+document.getElementById('joinBtn').addEventListener('click', async function(e){
+  e.preventDefault();
+  var t = '';
+  try {
+    var ctrl = new AbortController();
+    setTimeout(function(){ ctrl.abort(); }, 2500);
+    var r = await fetch(API + '/click', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      signal: ctrl.signal,
+      body: JSON.stringify({
+        fbclid: new URLSearchParams(location.search).get('fbclid'),
+        fbc: getCookie('_fbc'),
+        fbp: getCookie('_fbp'),
+        url: location.href
+      })
+    });
+    t = (await r.json()).t || '';
+  } catch (err) {}
+  location.href = 'https://t.me/' + BOT + (t ? '?start=' + t : '');
 });
 </script>
 </body>
